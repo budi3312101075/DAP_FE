@@ -28,6 +28,8 @@ const KriteriaPengajuan = () => {
   const [currentData, setCurrentData] = useState();
 
   const [nominal, setNominal] = useState(0);
+  const [special, setSpecial] = useState(0);
+  console.log(special);
 
   function removeCommaAndConvertToInt(nominal) {
     if (typeof nominal === "string") {
@@ -53,7 +55,7 @@ const KriteriaPengajuan = () => {
 
   const onSubmit = async (data) => {
     try {
-      // console.log(data);
+      console.log(data);
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/kriteria`,
         {
@@ -62,6 +64,7 @@ const KriteriaPengajuan = () => {
           keterangan: data.keterangans,
           dokumen: data.dokumens,
           batas_waktu: removeCommaAndConvertToInt(data.batas_waktus),
+          is_special: special,
         }
       );
       toast.success("Kriteria berhasil dibuat");
@@ -149,6 +152,7 @@ const KriteriaPengajuan = () => {
                 <th>Nominal</th>
                 <th>Keterangan</th>
                 <th>Dokumen</th>
+                <th>special</th>
                 <th>Batas Waktu</th>
                 <th>Action</th>
               </tr>
@@ -161,6 +165,7 @@ const KriteriaPengajuan = () => {
                   <td>{toRupiah(data?.nominal)}</td>
                   <td>{data.keterangan}</td>
                   <td>{data.dokumen}</td>
+                  <td>{data.is_special ? "Ya" : "Tidak"}</td>
                   <td>{hari(data.batas_waktu)}</td>
                   <td className="flex flex-col gap-1">
                     <button
@@ -276,6 +281,16 @@ const KriteriaPengajuan = () => {
               {formState.errors.batas_waktus.message}
             </span>
           )}
+          <div className="flex gap-2">
+            <input
+              type="checkbox"
+              className="checkbox border-black"
+              onClick={() => {
+                setSpecial(0 === special ? 1 : 0);
+              }}
+            />
+            <h1>special</h1>
+          </div>
           <Button
             type="submit"
             style="w-1/2 mx-auto bg-secondary mt-2 text-primary py-1 -mb-5"
